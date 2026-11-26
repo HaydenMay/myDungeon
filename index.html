@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>myDungeon</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">⚔️ my<span>Dungeon</span></div>
+    <nav class="tabs" id="mobileTabs">
+      <button data-panel="sheet">Sheet</button>
+      <button data-panel="story" class="active">Story</button>
+      <button data-panel="journal">Journal</button>
+    </nav>
+    <button class="icon-btn" id="settingsBtn" title="Settings">⚙️</button>
+  </header>
+
+  <!-- ===== New game screen ===== -->
+  <section id="setup" class="screen hidden">
+    <div class="card setup-card">
+      <h1>New Adventure</h1>
+      <p class="muted">The game tracks your stats, gear and gold. The AI runs the story.</p>
+      <label>Name <input id="cName" maxlength="30" placeholder="Brannoc the Bold" /></label>
+      <div class="row">
+        <label>Race <select id="cRace"></select></label>
+        <label>Class <select id="cClass"></select></label>
+      </div>
+      <div id="classPreview" class="preview"></div>
+      <label>Premise <span class="muted">(optional — leave blank and the DM invents one)</span>
+        <textarea id="cPremise" rows="3" placeholder="What kind of adventure?"></textarea>
+      </label>
+      <div class="chips" id="premiseChips"></div>
+      <div id="keyWarning" class="warn hidden">No API key yet — add one in ⚙️ Settings (or pick "Offline test DM" to try it out).</div>
+      <div class="row end">
+        <button id="importBtn2" class="ghost">Import save</button>
+        <button id="startBtn" class="primary">Begin</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Main game ===== -->
+  <main id="game" class="layout hidden">
+    <aside class="panel" id="panel-sheet"><div id="sheet"></div></aside>
+
+    <section class="panel story-panel active" id="panel-story">
+      <div id="feed" class="feed"></div>
+      <div id="combatBar" class="combat-bar hidden"></div>
+      <div id="pendingBar" class="pending-bar hidden"></div>
+      <div id="deathBar" class="pending-bar danger hidden"></div>
+      <div id="suggestions" class="chips"></div>
+      <form id="actionForm" class="action-form">
+        <textarea id="actionInput" rows="1" placeholder="What do you do?"></textarea>
+        <button class="primary" id="sendBtn" type="submit">Act</button>
+      </form>
+    </section>
+
+    <aside class="panel" id="panel-journal"><div id="journal"></div></aside>
+  </main>
+
+  <!-- ===== Settings ===== -->
+  <dialog id="settingsDlg">
+    <form method="dialog" class="settings">
+      <h2>Settings</h2>
+      <fieldset>
+        <legend>AI Dungeon Master</legend>
+        <label>Provider
+          <select id="sProvider">
+            <option value="openai">OpenAI (or compatible)</option>
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="mock">Offline test DM (no key)</option>
+          </select>
+        </label>
+        <div data-for="openai">
+          <label>OpenAI API key <input id="sOpenaiKey" type="password" autocomplete="off" placeholder="sk-..." /></label>
+          <label>Model <input id="sOpenaiModel" /></label>
+          <label>Base URL <input id="sOpenaiBase" /></label>
+        </div>
+        <div data-for="anthropic">
+          <label>Anthropic API key <input id="sAnthropicKey" type="password" autocomplete="off" placeholder="sk-ant-..." /></label>
+          <label>Model <input id="sAnthropicModel" /></label>
+        </div>
+        <p class="muted small">Keys stay in this browser and go straight to the provider. Don't use a shared computer.</p>
+      </fieldset>
+      <fieldset>
+        <legend>Narrator</legend>
+        <div class="row">
+          <label>Tone <select id="sTone"></select></label>
+          <label>Length <select id="sLength"></select></label>
+          <label>Difficulty <select id="sDifficulty"></select></label>
+        </div>
+        <label class="check"><input type="checkbox" id="sShowDm" /> Show DM-only journal (spoilers!)</label>
+      </fieldset>
+      <fieldset>
+        <legend>Save</legend>
+        <div class="row wrap">
+          <button type="button" id="exportBtn" class="ghost">Export save</button>
+          <button type="button" id="importBtn" class="ghost">Import save</button>
+          <button type="button" id="newGameBtn" class="ghost danger">New game</button>
+        </div>
+      </fieldset>
+      <div class="row end"><button class="primary" id="saveSettings" value="save">Done</button></div>
+    </form>
+  </dialog>
+  <input type="file" id="importFile" accept=".json,application/json" hidden />
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/dice.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/dm.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
